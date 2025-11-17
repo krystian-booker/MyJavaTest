@@ -3,12 +3,79 @@
  */
 package test;
 
+import java.util.Scanner;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+
+    // --- Enemy Stats as Constants ---
+    public static final String ENEMY_LEFT_NAME = "Left Enemy";
+    public static final int ENEMY_LEFT_HP = 20;
+    public static final int ENEMY_LEFT_ATK = 15;
+
+    public static final String ENEMY_RIGHT_NAME = "Right Enemy";
+    public static final int ENEMY_RIGHT_HP = 20;
+    public static final int ENEMY_RIGHT_ATK = 5;
+
+    // --- Player Stats ---
+    public static final int PLAYER_START_HP = 25;
+    public static final int PLAYER_ATK = 5;
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("=== SIMPLE TEXT RPG ===");
+        System.out.println("You are an adventurer with " + PLAYER_START_HP + " HP and " + PLAYER_ATK + " Attack.");
+        System.out.println("Ahead of you are two paths:");
+        System.out.println(" • Left Path - a shadowy figure blocks the way.");
+        System.out.println(" • Right Path - growling echoes from the darkness.");
+        System.out.println();
+
+        System.out.print("Do you go LEFT or RIGHT? ");
+        String choice = input.nextLine().toLowerCase();
+
+        if (choice.equals("left")) {
+            combat(ENEMY_LEFT_NAME, ENEMY_LEFT_HP, ENEMY_LEFT_ATK, input);
+        } else if (choice.equals("right")) {
+            combat(ENEMY_RIGHT_NAME, ENEMY_RIGHT_HP, ENEMY_RIGHT_ATK, input);
+        } else {
+            System.out.println("You hesitate too long and leave the dungeon. Game Over.");
+        }
+
+        input.close();
+    }
+
+    // --- Combat System ---
+    public static void combat(String enemyName, int enemyHP, int enemyATK, Scanner input) {
+        int playerHP = PLAYER_START_HP;
+
+        System.out.println("\nYou encounter " + enemyName + "!");
+
+        while (enemyHP > 0 && playerHP > 0) {
+            System.out.println("\nYour HP: " + playerHP + " | " + enemyName + " HP: " + enemyHP);
+            System.out.print("Press ENTER to attack...");
+            input.nextLine();
+
+            // Player attacks
+            enemyHP -= PLAYER_ATK;
+            System.out.println("You attack " + enemyName + " for " + PLAYER_ATK + " damage!");
+
+            if (enemyHP <= 0) {
+                System.out.println(enemyName + " has been defeated!");
+                break;
+            }
+
+            // Enemy attacks
+            playerHP -= enemyATK;
+            System.out.println(enemyName + " attacks you for " + enemyATK + " damage!");
+        }
+
+        // Final result
+        if (playerHP > 0) {
+            System.out.println("\nYou survived the battle!");
+            System.out.println("Remaining HP: " + playerHP);
+            System.out.println("You win!");
+        } else {
+            System.out.println("\nYou fall to the ground... defeated.");
+        }
     }
 }
